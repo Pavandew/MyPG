@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray">#202124</color>
+<!--    <color name="dark_app_color">#DC3806</color>-->
+<!--    <color name="light_app_color">#E6B76A</color>-->
+<!--    <color name="mid_dark_app_color">#F49913</color>-->
+<!--    <color name="mid_app_color">#D79534</color>-->
+<!--    <color name="dark_app_color">#121F64</color>-->
+<!--    <color name="light_app_color">#546AE2</color>-->
+<!--    <color name="mid_dark_app_color">#1831B4</color>-->
+<!--    <color name="mid_app_color">#2044F2</color>-->
+    <color name="dark_app_color">#075661</color>
+    <color name="light_app_color">#48D4E6</color>
+    <color name="super_light_app_color">#AFE4EB</color>
+    <color name="mid_dark_app_color">#059AAD</color>
+    <color name="mid_app_color">#21C7DC</color>
+    <color name="selected_color">#00BCD4</color>
+    <color name="unselected_color">#595652</color>
+</resources>
+
+

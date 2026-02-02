@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/guestHomeFragment"
+        android:icon="@drawable/icon_home_24dp"
+        android:title="Home"
+        android:iconTint="@null"
+        app:icon="@drawable/bottom_nav_bg_selector"
+        />
+
+    <item
+        android:id="@+id/guestListingFragment"
+        android:icon="@drawable/icon_list_24dp"
+        android:title="Listing"
+        android:iconTint="@null"
+        app:icon="@drawable/bottom_nav_bg_selector"
+        />
+
+    <item
+        android:id="@+id/guestSearchFragment"
+        android:icon="@drawable/ic_bookmarkheart_24dp"
+        android:title="Wishlist"
+        app:tint="@color/white"
+        android:iconTint="@null"
+        app:icon="@drawable/bottom_nav_bg_selector"
+        />
+
+
+<!--    <item-->
+<!--        android:id="@+id/guestRentiesFragment"-->
+<!--        android:icon="@drawable/icon_enquiries_24dp"-->
+<!--        android:title="Renties"-->
+<!--        android:iconTint="@null"-->
+<!--        app:icon="@drawable/bottom_nav_bg_selector"-->
+<!--        />-->
+
+    <item
+        android:id="@+id/guestProfileFragment"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="Setting"
+        android:iconTint="@null"
+        app:icon="@drawable/bottom_nav_bg_selector"
+        />
+
+
+</menu>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/guest_nav_graph"
+    app:startDestination="@id/guestHomeFragment">
+
+    <fragment
+        android:id="@+id/guestHomeFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.GuestHomeFragment"
+        android:label="fragment_guest_home"
+        tools:layout="@layout/fragment_guest_home" >
+
+        <action
+            android:id="@+id/action_guestHomeFragment_to_guestDetailFragment"
+            app:destination="@id/guestDetailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/guestSavedFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.GuestSavedFragment"
+        android:label="fragment_guest_saved"
+        tools:layout="@layout/fragment_guest_saved" />
+
+    <fragment
+        android:id="@+id/guestListingFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.GuestListingFragment"
+        android:label="fragment_guest_listing"
+        tools:layout="@layout/fragment_guest_listing" >
+
+        <action
+            android:id="@+id/action_guestListingFragment_to_guestDetailFragment"
+            app:destination="@id/guestDetailFragment" />
+        <action
+            android:id="@+id/action_guestListingFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/guestSettingFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.GuestSettingFragment"
+        android:label="fragment_guest_setting"
+        tools:layout="@layout/fragment_guest_setting" />
+
+    <fragment
+        android:id="@+id/guestDetailFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.GuestDetailFragment"
+        android:label="fragment_guest_detail"
+        tools:layout="@layout/fragment_guest_detail">
+
+        <argument
+            android:name="pgId"
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.example.searchroom.guestScreen.fragments.FilterFragment"
+        android:label="fragment_filter"
+        tools:layout="@layout/fragment_filter"/>
+
+</navigation>
