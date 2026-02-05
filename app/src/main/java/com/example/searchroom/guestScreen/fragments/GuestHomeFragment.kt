@@ -1,17 +1,22 @@
 package com.example.searchroom.guestScreen.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.searchroom.R
 import com.example.searchroom.databinding.FragmentGuestHomeBinding
 import com.example.searchroom.databinding.ItemPgCardBinding
 import com.example.searchroom.databinding.ItemSmallChipsBinding
+import com.example.searchroom.guestScreen.GuestActivity
+import com.example.searchroom.guestScreen.LocationBottomSheet
 
 class GuestHomeFragment : Fragment() {
+    private val TAG = "GuestHomeFragment"
 
     private var _binding: FragmentGuestHomeBinding? = null
     private val binding get() = _binding!!
@@ -33,11 +38,21 @@ class GuestHomeFragment : Fragment() {
         // Set small chips here
         setChips()
 
+        binding.homeLocationTv.setOnClickListener {
+            showLocationBottomSheet()
+        }
+
+        binding.homeItemPgCard.pgCardFav.setOnClickListener {
+
+            Log.d(TAG, "Saved in Favorite")
+            Toast.makeText(requireContext(), "Saved in Favorite", Toast.LENGTH_SHORT).show()
+
+        }
+
         // navigate to detail Screen(click on view detail button)
         binding.homeItemPgCard.guestViewDetailsBtn.setOnClickListener {
             navigationDetailScreen("pg1")
         }
-
     }
 
     // set Category Card
@@ -79,6 +94,25 @@ class GuestHomeFragment : Fragment() {
 
         acChip.itemChipTv.text = getString(R.string.ac)
         acChip.itemChipImg.setImageResource(R.drawable.ic_ac_24dp)
+    }
+
+    private fun showLocationBottomSheet() {
+
+        val sheet = LocationBottomSheet(
+            onCurrentLocation = { lat, lng ->
+
+                // Update UI (for now)
+                binding.homeLocationTv.text = "Near You"
+
+                // later send to viewModel -> listin gdistance filter
+            },
+
+            onManualLocation = { city ->
+                binding.homeLocationTv.text = city
+            }
+        )
+
+        sheet.show(parentFragmentManager, "LocationBottomSheet")
     }
 
     private fun navigationDetailScreen(pg: String) {

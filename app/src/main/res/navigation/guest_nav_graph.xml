@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_guestHomeFragment_to_guestDetailFragment"
             app:destination="@id/guestDetailFragment" />
+        <action
+            android:id="@+id/action_guestHomeFragment_to_guestSavedFragment"
+            app:destination="@id/guestSavedFragment" />
 
     </fragment>
 
@@ -21,7 +24,12 @@
         android:id="@+id/guestSavedFragment"
         android:name="com.example.searchroom.guestScreen.fragments.GuestSavedFragment"
         android:label="fragment_guest_saved"
-        tools:layout="@layout/fragment_guest_saved" />
+        tools:layout="@layout/fragment_guest_saved" >
+        <action
+            android:id="@+id/action_guestSavedFragment_to_guestDetailFragment"
+            app:destination="@id/guestDetailFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/guestListingFragment"
@@ -35,6 +43,9 @@
         <action
             android:id="@+id/action_guestListingFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_guestListingFragment_to_guestSavedFragment"
+            app:destination="@id/guestSavedFragment" />
 
     </fragment>
 
@@ -60,6 +71,8 @@
         android:id="@+id/filterFragment"
         android:name="com.example.searchroom.guestScreen.fragments.FilterFragment"
         android:label="fragment_filter"
-        tools:layout="@layout/fragment_filter"/>
+        tools:layout="@layout/fragment_filter">
+
+    </fragment>
 
 </navigation>

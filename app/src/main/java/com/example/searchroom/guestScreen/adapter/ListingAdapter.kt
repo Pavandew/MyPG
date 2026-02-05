@@ -1,8 +1,8 @@
 package com.example.searchroom.guestScreen.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.searchroom.R
@@ -11,12 +11,24 @@ import com.example.searchroom.guestScreen.model.PgListing
 
 class ListingAdapter(
     private var items: List<PgListing> = emptyList(),
-    private val onItemClick: (PgListing) -> Unit
+    private val onDetailItemClick: (PgListing) -> Unit,
+    private val onFavItemClick: (PgListing) -> Unit
 ): RecyclerView.Adapter<ListingAdapter.ListingViewHolder>() {
 
-    fun updateList(newItems: List<PgListing>) {
+    fun submitList(newItems: List<PgListing>) {
         items = newItems
-        notifyDataSetChanged()
+    }
+
+    companion object DiffCallback : DiffUtil.ItemCallback<PgListing>() {
+        override fun areItemsTheSame(oldItem: PgListing, newItem: PgListing): Boolean {
+
+            return oldItem.pgId == newItem.pgId
+
+        }
+
+        override fun areContentsTheSame(oldItem: PgListing, newItem: PgListing): Boolean {
+            return oldItem == newItem
+        }
     }
 
     override fun onCreateViewHolder(
@@ -43,23 +55,24 @@ class ListingAdapter(
 
         fun bind(item: PgListing) {
             binding.pgCardPgName.text = item.pgName
-            binding.pgCardTvOnlyFor.text =item.price
-            binding.homeTvPrice.text = item.price
-            binding.pgCardLocation.text = item.location
+//            binding.pgCardTvOnlyFor.text =item.price
+//            binding.homeTvPrice.text = item.price
+//            binding.pgCardLocation.text = item.location
             binding.pgCardRating.text = item.rating.toString()
 
-            binding.pgCardImage.load(item.images) {
+            binding.pgCardImage.load(item.images.firstOrNull()) {
                 placeholder(R.drawable.room_image)
                     .error(R.drawable.room_image)
                     .crossfade(true)
             }
 
             binding.guestViewDetailsBtn.setOnClickListener {
-                onItemClick(item)
+                onDetailItemClick(item)
             }
+
+            binding.pgCardFav.setOnClickListener {
+                onFavItemClick(item)
+            }
+        }
     }
-}
-
-
-
 }

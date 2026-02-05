@@ -1,7 +1,6 @@
 package com.example.searchroom.guestScreen
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
@@ -28,14 +27,22 @@ class GuestActivity : AppCompatActivity() {
 
         val bottomNavScreens = setOf(
             R.id.guestHomeFragment,
-            R.id.guestSearchFragment,
             R.id.guestListingFragment,
-            R.id.guestProfileFragment
+            R.id.guestSavedFragment,
+            R.id.guestSettingFragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.guestBottomNav.isVisible = destination.id in bottomNavScreens
         }
 
+    }
+
+    fun openSavedTab() {
+        binding.guestBottomNav.selectedItemId = R.id.guestSavedFragment
+    }
+
+    fun openListingTab() {
+        binding.guestBottomNav.selectedItemId = R.id.guestListingFragment
     }
 }

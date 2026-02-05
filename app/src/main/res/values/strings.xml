@@ -11,5 +11,6 @@
     <string name="ac">AC</string>
 
     <string name="map_overview_underlined"><u>Map overview</u></string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>
