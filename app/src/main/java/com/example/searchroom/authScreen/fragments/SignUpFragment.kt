@@ -29,15 +29,15 @@ import kotlinx.coroutines.launch
 class SignUpFragment : Fragment() {
     private val TAG = "SignUpFragment"
 
-    private val args: SignUpFragmentArgs by navArgs()
-//    val userType = args.userType
-    private val userType: String by lazy { args.userType }
+//    private val args: SignUpFragmentArgs by navArgs()
+////    val userType = args.userType
+//    private val userType: String by lazy { args.userType }
 //
-//    private val userType: String by lazy {
-//        requireContext()
-//            .getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-//            .getString("selected_role", "GUEST") ?: "GUEST"
-//    }
+    private val userType: String by lazy {
+        requireContext()
+            .getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+            .getString("selected_role", "GUEST") ?: "GUEST"
+    }
 
     private val viewModel: SignUpViewModel by viewModels()
 
@@ -72,7 +72,7 @@ class SignUpFragment : Fragment() {
         // Go to Login
         binding.signUpLoginTv.setOnClickListener {
             val action =
-                SignUpFragmentDirections.actionSignUpFragmentToLoginFragment(userType)
+                SignUpFragmentDirections.actionSignUpFragmentToLoginFragment()
             findNavController().navigate(action)
         }
 

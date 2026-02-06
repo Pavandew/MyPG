@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.searchroom.authScreen.repository.AuthRepository
 import com.example.searchroom.authScreen.repository.UserRepository
 import com.example.searchroom.authScreen.uiState.SignUpUiState
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlin.math.PI
 
 class LoginViewModel: ViewModel() {
 
@@ -50,23 +50,40 @@ class LoginViewModel: ViewModel() {
 
     fun loginWithGoogle(
         activity: Activity,
-        webClientId: String
+        webClientId: String,
+        selectedUserType: String,
     ) {
         _uiState.value = SignUpUiState(isLoading = true)
 
         viewModelScope.launch {
             AuthRepository.signInWithGoogle(activity, webClientId) { success, error ->
 
-                if(success) {
-                    UserRepository.getUserType { type ->
-                        val finalType = type ?: "GUEST"
-                        Log.d(TAG, "Firestore userType: $finalType")
+                if (success) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    Log.d(TAG, "Google Sign In success: $user")
 
-                        _uiState.value = SignUpUiState(isLoading = false, navigateTo = finalType)
+                    UserRepository.getUserType { existingType ->
+                        val finalRole = existingType ?: selectedUserType
+                        Log.d(TAG, "Firestore userType: $finalRole")
+
+                        UserRepository.saveUserProfile(
+                            name = user?.displayName ?: "",
+                            email = user?.email ?: "",
+                            photoUrl = user?.photoUrl?.toString(),
+                            userType = finalRole
+                        ) { ok ->
+                            _uiState.value = SignUpUiState(
+                                isLoading = false,
+                                navigateTo = if (ok) finalRole else null,
+                                error = if (ok) null else "Failed to save profile"
+                            )
+                        }
                     }
                 } else {
-                    Log.d(TAG, "Login error with message: $error")
-                    _uiState.value = SignUpUiState(isLoading = false, error = error ?: "Login failed")
+                    _uiState.value = SignUpUiState(
+                        isLoading = false,
+                        error = error
+                    )
                 }
             }
         }
@@ -74,7 +91,6 @@ class LoginViewModel: ViewModel() {
 
     fun clearLoginError() {
         _uiState.value = _uiState.value.copy(error = null)
-
     }
 
     fun clearLoginNavigation() {

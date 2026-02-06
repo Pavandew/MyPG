@@ -5,14 +5,13 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.searchroom.authScreen.helper.GoogleCredentialAuthHelper
 import com.example.searchroom.authScreen.repository.AuthRepository
 import com.example.searchroom.authScreen.repository.UserRepository
 import com.example.searchroom.authScreen.uiState.SignUpUiState
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 
 class SignUpViewModel: ViewModel() {
     private val TAG = "SignUpViewModel"
@@ -34,14 +33,23 @@ class SignUpViewModel: ViewModel() {
 
         viewModelScope.launch {
             AuthRepository.signUpWithEmailPassword(
-                name = name, email = email , password = password, userType = userType
+                email = email , password = password
             ) { success, message ->
 
                 if(success) {
-                    _uiState.value = SignUpUiState(
-                        isLoading = false,
-                        navigateTo = userType
-                    )
+                    UserRepository.saveUserProfile(
+                        name = name,
+                        email = email,
+                        photoUrl = null,
+                        userType = userType
+                    ) { ok ->
+                        _uiState.value = SignUpUiState(
+                            isLoading = false,
+                            navigateTo = if(ok) userType else null,
+                            error = if(ok) null else "Failed to Save profile"
+                        )
+                    }
+
                     Log.d(TAG, "Signup success")
                 } else {
                     _uiState.value = SignUpUiState(
@@ -63,67 +71,45 @@ class SignUpViewModel: ViewModel() {
         _uiState.value = SignUpUiState(isLoading = true)
 
         viewModelScope.launch {
-            AuthRepository.signInWithGoogle(activity, webClientId){ success, error ->
+            AuthRepository.signInWithGoogle(activity, webClientId) { success, error ->
 
-                if(success) {
-                    UserRepository.getUserType { type ->
-                        if(type.isNullOrEmpty()) {
-                            UserRepository.saveUserType(selectedUserType) { ok ->
-                                _uiState.value = SignUpUiState(
-                                    isLoading = false,
-                                    navigateTo = if(ok) selectedUserType else null,
-                                    error = if(ok) null else "Failed to save user type"
+                if (success) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    Log.d(TAG, "Google Sign In success: $user")
 
-                                )
-                            }
-                        } else {
-                            // Existing user -> use stored role
+                    UserRepository.getUserType { existingType ->
+                        val finalRole = existingType ?: selectedUserType
+                        Log.d(TAG, "Firestore userType: $finalRole")
+
+                        UserRepository.saveUserProfile(
+                            name = user?.displayName ?: "",
+                            email = user?.email ?: "",
+                            photoUrl = user?.photoUrl?.toString(),
+                            userType = finalRole
+                        ) { ok ->
                             _uiState.value = SignUpUiState(
                                 isLoading = false,
-                                navigateTo = type
+                                navigateTo = if (ok) finalRole else null,
+                                error = if (ok) null else "Failed to save profile"
                             )
                         }
-
                     }
                 } else {
                     _uiState.value = SignUpUiState(
                         isLoading = false,
-                        error = error)
+                        error = error
+                    )
                 }
-
             }
-//                onSuccess = {
-//                    // After firebase google login success:
-//                    UserRepository.getUserType { type ->
-//                        if(type.isNullOrEmpty()) {
-//                            UserRepository.saveUserType(selectedUserType) { ok ->
-//                                if(ok){
-//                                    _uiState.value = SignUpUiState(isLoading = false, navigateTo = selectedUserType)
-//                                } else {
-//                                    _uiState.value = SignUpUiState(isLoading = false, error = "Failed to save user type")
-//                                }
-//
-//                            }
-//                        }  else {
-//                            _uiState.value = SignUpUiState(isLoading = false, navigateTo = type)
-//                        }
-//                    }
-//                },
-//                onError = { msg ->
-//                    _uiState.value = SignUpUiState(isLoading = false, error = msg)
-//                }
-//            )
         }
     }
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
-
     }
 
     fun clearNavigation() {
         _uiState.value = _uiState.value.copy(navigateTo = null)
-
     }
 
     private fun isValid(
@@ -157,7 +143,6 @@ class SignUpViewModel: ViewModel() {
             _uiState.value = SignUpUiState(error = "Passwords do not match")
             return false
         }
-
         return true
     }
 }

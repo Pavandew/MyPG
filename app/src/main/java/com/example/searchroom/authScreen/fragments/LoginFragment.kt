@@ -51,6 +51,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         Log.d(TAG, "Received userType: $userType")
 
         // Observe state changes from ViewModel
@@ -70,7 +71,7 @@ class LoginFragment : Fragment() {
         // Navigate to SignUp (role only matters during first-time signup)
         binding.loginSignUpTv.setOnClickListener {
             val action = LoginFragmentDirections
-                .actionLoginFragmentToSignUpFragment(userType)
+                .actionLoginFragmentToSignUpFragment()
             findNavController().navigate(action)
         }
     }
@@ -118,7 +119,9 @@ class LoginFragment : Fragment() {
     private fun setupGoogleLogin() {
         binding.loginGoogleBtn.setOnClickListener {
             Log.d(TAG, "Google Login Clicked")
-            viewModel.loginWithGoogle(activity = requireActivity(), webClientId = getString(R.string.default_web_client_id))
+            viewModel.loginWithGoogle(activity = requireActivity(),
+                webClientId = getString(R.string.default_web_client_id),
+                selectedUserType = userType)
         }
     }
 
