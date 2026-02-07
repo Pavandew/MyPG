@@ -13,68 +13,50 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val splash = installSplashScreen()
+        // Modern Android Splash API
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
-        var keep = true
-        splash.setKeepOnScreenCondition { keep }
+        navigateUser()
+    }
 
-        // Move to next Screen
-        window.decorView.postDelayed({
-            keep = false
+    private fun navigateUser() {
 
-            val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-            val role = prefs.getString("selected_role", null)
-            val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val role = prefs.getString("selected_role", null)
 
-            val nextIntent = if(isLoggedIn && role != null) {
-
-                when(role) {
-                    "HOST" -> Intent(this, HostActivity::class.java)
-                    "GUEST" -> Intent(this, GuestActivity::class.java)
-                    else -> Intent(this, AuthActivity::class.java)
-                }
-            } else {
+        val nextIntent = when {
+            currentUser == null -> {
+                // Not logged in
                 Intent(this, AuthActivity::class.java)
             }
 
-            startActivity(nextIntent)
-            finish()
-        }, 1200)
+            role == "HOST" -> {
+                Intent(this, HostActivity::class.java)
+            }
 
+            role == "GUEST" -> {
+                Intent(this, GuestActivity::class.java)
+            }
 
+            else -> {
+                // If role missing or corrupted
+                clearSession()
+                Intent(this, AuthActivity::class.java)
+            }
+        }
 
-        // For Custom Splash Screen
-//        setContentView(R.layout.activity_splash)
-
-//        val tvTitle = findViewById<TextView>(R.id.splash_title)
-//        val imageLogo = findViewById<ImageView>(R.id.splash_imageView)
-//
-//
-//        // Animations for Image
-//        imageLogo.animate()
-//            .alpha(1f)
-//            .scaleX(1.5f)
-//            .scaleY(1.5f)
-//            .setDuration(1000)
-//            .setStartDelay(150)
-//            .start()
-//
-//        // Animation for Text
-//        tvTitle.animate()
-//            .alpha(1f)
-//            .scaleX(1.5f)
-//            .scaleY(1.5f)
-//            .setDuration(1000)
-//            .setStartDelay(250)
-//            .start()
-
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            startActivity(Intent(this, AuthActivity::class.java))
-//            finish()
-//        }, 2000)
-
+        startActivity(nextIntent)
+        finish()
     }
 
+    private fun clearSession() {
+        FirebaseAuth.getInstance().signOut()
+        getSharedPreferences("app_prefs", MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
+    }
 }

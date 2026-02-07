@@ -47,4 +47,8 @@ object AuthRepository {
             .addOnFailureListener { e -> onResult(false, e.message) }
 
     }
+
+    fun logOut() {
+        FirebaseAuth.getInstance().signOut()
+    }
 }

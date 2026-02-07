@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="16dp"
-    tools:context=".guestScreen.fragments.GuestSettingFragment">
+    tools:context=".hostScreen.fragments.HostSettingFragment">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
@@ -44,7 +43,7 @@
 
             <!-- EDIT PROFILE CARD -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/guest_CardEditProfile"
+                android:id="@+id/cardEditProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
@@ -54,7 +53,7 @@
                 app:cardUseCompatPadding="true">
 
                 <include
-                    android:id="@+id/guest_setting_editProfile"
+                    android:id="@+id/host_setting_editProfile"
                     layout="@layout/item_setting_row" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -87,7 +86,7 @@
 
                     <!-- Switch User Row -->
                     <include
-                        android:id="@+id/guest_setting_SwitchUser"
+                        android:id="@+id/host_setting_SwitchUser"
                         layout="@layout/item_setting_row" />
 
                     <View
@@ -97,7 +96,7 @@
                         android:background="#686565"/>
 
                     <include
-                        android:id="@+id/guest_setting_SavedPg"
+                        android:id="@+id/host_setting_SavedPg"
                         layout="@layout/item_setting_row" />
 
                 </LinearLayout>
@@ -131,7 +130,7 @@
                     android:orientation="vertical">
 
                     <include
-                        android:id="@+id/guest_setting_help"
+                        android:id="@+id/host_setting_help"
                         layout="@layout/item_setting_row" />
 
                 </LinearLayout>
@@ -165,7 +164,7 @@
                     android:orientation="vertical">
 
                     <include
-                        android:id="@+id/guest_setting_Logout"
+                        android:id="@+id/host_setting_Logout"
                         layout="@layout/item_setting_row" />
 
                 </LinearLayout>
